@@ -13,6 +13,10 @@ class Files:
         except FileNotFoundError:
             return None
 
+    def write(self, file, content) -> None:
+        with open(file, "a") as f:
+            f.write(content)
+
     @property
     def files(self) -> List[str]:
         return self._files
