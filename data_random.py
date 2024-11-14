@@ -20,4 +20,4 @@ if __name__ == "__main__":
 
     f = Files()
     for user in users:
-        f.write("users.txt", f"{user[0]}, {user[1]}\n")
+        f.write("users.txt", f"{user[0]},{user[1]}\n")
