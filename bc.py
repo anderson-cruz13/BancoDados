@@ -1,14 +1,19 @@
 import mysql.connector
 from files import Files
 from datetime import datetime
+import dotenv
+import os
+
+
+dotenv.load_dotenv()
 
 
 class Bank:
     def __enter__(self):
         self.conexao = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="admin",
+            host=os.environ['MYSQL_HOST'],
+            user=os.environ['MYSQL_USER'],
+            password=os.environ['MYSQL_PASSWORD'],
         )
         self.cursor = self.conexao.cursor()
 
@@ -62,13 +67,13 @@ class BankWrite:
 
                         # Inserir no banco de dados
                         cursor.execute(f"""
-                                      INSERT INTO pessoas (nome, idade)
-                                      VALUES ('{nome}', {idade})""")
+                                        INSERT INTO pessoas (nome, idade)
+                                        VALUES ('{nome}', {idade})""")
                         conexao.commit()
                     except ValueError:
                         print(f"""Erro ao processar a linha: '{user}'.
-                              A linha deve conter nome e nascimento separados
-                              por vírgula.""")
+                                A linha deve conter nome e nascimento separados
+                                por vírgula.""")
 
     def __exit__(self, exc_type, exc_value, traceback):
         pass
