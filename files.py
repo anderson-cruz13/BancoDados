@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 from datetime import datetime
 
 
@@ -31,7 +31,7 @@ class Files:
             f.write(content)
 
     @property
-    def files(self) -> List[str]:
+    def files(self) -> List[Tuple[str, str]]:
         return self._files
 
 
