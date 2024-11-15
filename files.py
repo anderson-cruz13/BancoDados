@@ -1,4 +1,5 @@
 from typing import List
+from datetime import datetime
 
 
 class Files:
@@ -8,8 +9,20 @@ class Files:
     def read(self, file) -> None:
         try:
             with open(file, "r") as f:
-                content = f.read()
-                self._files.append(content)
+                for line in f:
+
+                    parts = line.strip().split(",")
+                    if len(parts) == 2:
+                        name = parts[0].strip()
+                        birth_date = parts[1].strip()
+
+                        try:
+                            converted_date = datetime.strptime(
+                                birth_date, "%d/%m/%Y").strftime("%Y-%m-%d")
+                            self._files.append((name, converted_date))
+                        except ValueError:
+                            return None
+
         except FileNotFoundError:
             return None
 
@@ -24,5 +37,5 @@ class Files:
 
 if __name__ == "__main__":
     f = Files()
-    f.read("test.txt")
+    f.read("users.txt")
     print(f.files)

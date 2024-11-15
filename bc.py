@@ -38,7 +38,7 @@ class BankWrite:
                 CREATE TABLE IF NOT EXISTS pessoas (
                     id INT NOT NULL AUTO_INCREMENT,
                     nome VARCHAR(255),
-                    idade INT,
+                    idade DATE,
                     PRIMARY KEY (id)
                 )
                 """
@@ -49,33 +49,13 @@ class BankWrite:
         f.read("users.txt")
         db = f.files
 
-        with Bank() as (cursor, conexao):
-            for i in db:
-                for user in i.splitlines():
-                    user = user.strip()
-
-                    if not user:
-                        continue
-
-                    try:
-                        nome, birth = user.split(",", 1)
-                        nome = nome.strip()
-                        birth = birth.strip()
-
-                        # Calcular a idade
-                        birth_date = datetime.strptime(birth, "%d/%m/%Y")
-                        today = datetime.today()
-                        idade = (today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day)))
-
-                        # Inserir no banco de dados
-                        cursor.execute(f"""
-                                        INSERT INTO pessoas (nome, idade)
-                                        VALUES ('{nome}', {idade})""")
-                        conexao.commit()
-                    except ValueError:
-                        print(f"""Erro ao processar a linha: '{user}'.
-                                A linha deve conter nome e nascimento separados
-                                por vírgula.""")
+        if db:
+            with Bank() as (cursor, conexao):
+                cursor.executemany(
+                    "INSERT INTO pessoas (nome, idade) VALUES (%s, %s)",
+                    db,
+                )
+                conexao.commit()
 
     def __exit__(self, exc_type, exc_value, traceback):
         pass
