@@ -36,8 +36,10 @@ class BankWrite:
             cursor.execute(
                 """
                 CREATE TABLE IF NOT EXISTS pessoas (
+                    id INT NOT NULL AUTO_INCREMENT,
                     nome VARCHAR(255),
-                    idade INT
+                    idade INT,
+                    PRIMARY KEY (id)
                 )
                 """
             )
